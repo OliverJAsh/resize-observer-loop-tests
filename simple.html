@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<body></body>
+<script>
+    window.onerror = (...args) => {
+        console.log("window.onerror", args);
+    };
+
+    const createAndAppendElement = (tagName, parent) => {
+        if (!parent) {
+            parent = document.body;
+        }
+        const element = document.createElement(tagName);
+        parent.appendChild(element);
+        return element;
+    };
+
+    const t1 = createAndAppendElement("div");
+
+    const observer = new ResizeObserver((entries) => {
+        console.log("callback", entries.length);
+
+        t1.style.width = "101px";
+    });
+
+    observer.observe(t1);
+</script>

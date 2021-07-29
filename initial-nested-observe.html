@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<body></body>
+<script>
+    window.onerror = (...args) => {
+        console.log("window.onerror", args);
+    };
+
+    const createAndAppendElement = (tagName, parent) => {
+        if (!parent) {
+            parent = document.body;
+        }
+        const element = document.createElement(tagName);
+        parent.appendChild(element);
+        return element;
+    };
+
+    const outer = createAndAppendElement("div");
+    const inner = createAndAppendElement("div", outer);
+
+    console.log("Outer: observe");
+
+    const observerOuter = new ResizeObserver((entries) => {
+        console.log("Outer: callback", entries.length);
+
+        console.log("Inner: observe");
+
+        const observerInner = new ResizeObserver((entries) => {
+            console.log("Inner: callback", entries.length);
+        });
+
+        observerInner.observe(outer);
+    });
+
+    observerOuter.observe(inner);
+</script>

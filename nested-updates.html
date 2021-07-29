@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<body></body>
+<script>
+    window.onerror = (...args) => {
+        console.log("window.onerror", args);
+    };
+
+    //
+    // Copied from https://github.com/web-platform-tests/wpt/blob/d309992cc95cc8f340dd11065b51c4f1818a250c/resize-observer/eventloop.html#L45
+    //
+
+    const createAndAppendElement = (tagName, parent) => {
+        if (!parent) {
+            parent = document.body;
+        }
+        const element = document.createElement(tagName);
+        parent.appendChild(element);
+        return element;
+    };
+
+    const t1 = createAndAppendElement("div");
+    const t2 = createAndAppendElement("div", t1);
+    const t3 = createAndAppendElement("div", t2);
+
+    const divs = [t1, t2, t3];
+
+    const observer = new ResizeObserver((entries) => {
+        console.log("callback", entries.length);
+
+        divs.forEach((el) => {
+            el.style.width = "101px";
+        });
+    });
+
+    observer.observe(t1);
+    observer.observe(t2);
+    observer.observe(t3);
+</script>
