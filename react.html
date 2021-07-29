@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<body>
+    <div id="root"></div>
+</body>
+<script
+    src="https://unpkg.com/react@17/umd/react.development.js"
+    crossorigin
+></script>
+<script
+    src="https://unpkg.com/react-dom@17/umd/react-dom.development.js"
+    crossorigin
+></script>
+<script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+<script type="text/babel">
+    window.onerror = (...args) => {
+        console.log("window.onerror", args);
+    };
+
+    function MyComponent() {
+        const ref = React.useRef(null);
+        const [state, setState] = React.useState(0);
+
+        React.useEffect(() => {
+            console.log("subscribe");
+            const ro = new ResizeObserver(() => {
+                console.log("callback");
+                setState((n) => n + 1);
+            });
+            ro.observe(ref.current);
+        }, []);
+
+        return <div ref={ref}>foo</div>;
+    }
+
+    function App() {
+        const [state, setState] = React.useState(false);
+
+        React.useLayoutEffect(() => {
+            setState(true);
+        }, []);
+
+        return (
+            <div>
+                <MyComponent />
+                {state && <MyComponent />}
+            </div>
+        );
+    }
+
+    ReactDOM.render(<App />, document.getElementById("root"));
+</script>
